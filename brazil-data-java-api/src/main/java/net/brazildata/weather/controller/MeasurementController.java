@@ -2,13 +2,10 @@ package net.brazildata.weather.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
-import net.brazildata.weather.model.Measurement;
 import net.brazildata.weather.model.dto.Frequency;
 import net.brazildata.weather.model.dto.MeasurementDTO;
 import net.brazildata.weather.model.dto.TemperatureByFrequencyDTO;
-import net.brazildata.weather.repository.MeasurementRepository;
+import net.brazildata.weather.service.MeasurementService;
 
 @RestController
 @RequestMapping("/v1/weather/measurements")
 @CrossOrigin("*")
 public class MeasurementController {
 
-  private final MeasurementRepository measurementRepository;
-
   @Value("${page.size}")
   private int pageSize;
 
-  public MeasurementController(MeasurementRepository medidaRepository) {
-    this.measurementRepository = medidaRepository;
+  private final MeasurementService measurementService;
+
+  public MeasurementController(MeasurementService measurementService) {
+    this.measurementService = measurementService;
   }
 
   @GetMapping("/{year}/{state}")
@@ -48,9 +44,7 @@ public class MeasurementController {
       @RequestParam(defaultValue = "0") int page) {
     Sort sort = Sort.by("station", "collectedOn");
     PageRequest pg = PageRequest.of(page, pageSize, sort);
-    Page<Measurement> medidas =
-        this.measurementRepository.findByYearAndStationState(year, state, pg);
-    List<MeasurementDTO> dtos = medidas.stream().map(this::convert).collect(Collectors.toList());
+    List<MeasurementDTO> dtos = this.measurementService.findByYearAndStationState(year, state, pg);
     return ResponseEntity.ok(dtos);
   }
 
@@ -69,23 +63,15 @@ public class MeasurementController {
         .boxed()
         .collect(Collectors.toList())
         .forEach(
-            ano -> {
+            year -> {
               Arrays.asList(states.split(","))
                   .stream()
                   .forEach(
                       state -> {
-                        List<Object> list =
-                            this.measurementRepository.findTemperatureByFrequencyAndYearAndState(
-                                frequency, ano, state);
-                        List<TemperatureByFrequencyDTO> collected =
-                            list.stream()
-                                .map(this::convertTemperatureByFrequency)
-                                .collect(Collectors.toList());
-                        collected.sort(
-                            Comparator.comparing(TemperatureByFrequencyDTO::getMonth)
-                                .thenComparing(TemperatureByFrequencyDTO::getYear)
-                                .thenComparing(TemperatureByFrequencyDTO::getState));
-                        dtos.add(collected);
+                        List<TemperatureByFrequencyDTO> list =
+                            this.measurementService.findTemperatureByFrequencyAndYearAndState(
+                                frequency, year, state);
+                        dtos.add(list);
                       });
             });
 
@@ -95,25 +81,7 @@ public class MeasurementController {
   @GetMapping("/years")
   @ApiOperation("Find available years")
   public ResponseEntity<List<Integer>> findYears() {
-    List<Integer> years = this.measurementRepository.findYears();
+    List<Integer> years = this.measurementService.findYears();
     return ResponseEntity.ok(years);
-  }
-
-  private MeasurementDTO convert(Measurement medida) {
-    ModelMapper mapper = new ModelMapper();
-    return mapper.map(medida, MeasurementDTO.class);
-  }
-
-  private TemperatureByFrequencyDTO convertTemperatureByFrequency(Object object) {
-    Object[] arr = (Object[]) object;
-    int i = 0;
-    return TemperatureByFrequencyDTO.builder()
-        .temperatureAvg(Float.valueOf(arr[i++].toString()))
-        .temperatureMax(Float.valueOf(arr[i++].toString()))
-        .temperatureMin(Float.valueOf(arr[i++].toString()))
-        .year(Integer.valueOf(arr[i++].toString()))
-        .month(Integer.valueOf(arr[i++].toString()))
-        .state(arr[i++].toString())
-        .build();
   }
 }

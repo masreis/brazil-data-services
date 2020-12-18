@@ -36,21 +36,26 @@ public class MeasurementCustomRepositoryImpl implements MeasurementCustomReposit
     return resultList;
   }
 
+  // TODO Implement other frequencies
   public List<Object> findTemperatureByFrequencyAndYearAndState(
       Frequency frequency, Integer year, String state) {
-    String sql =
-        "select round(avg(air_dry_bulb_temperature),1) temperatureAvg, max(max_temperature_prev_hour) temperatureMax, "
-            + "min(min_temperature_prev_hour) temperatureMin, year, month, "
-            + "m.state from measurement m left join station s on m.station_id = s.id "
-            + "where 1 = 1 and m.year = :year and m.state = :state and m.air_dry_bulb_temperature != -9999 "
-            + "and m.max_temperature_prev_hour != -9999 and m.min_temperature_prev_hour != -9999 "
-            + "group by m.year, m.month, m.state";
-    //        long start = System.currentTimeMillis();
+    String sql = "";
+    switch (frequency) {
+      case MONTHLY:
+        sql =
+            "select round(avg(air_dry_bulb_temperature),1) temperatureAvg, max(max_temperature_prev_hour) temperatureMax, "
+                + "min(min_temperature_prev_hour) temperatureMin, year, month, "
+                + "m.state, 'MONTHLY' as frequency, date_format(collected_on, '%Y-%m') "
+                + "from measurement m left join station s on m.station_id = s.id "
+                + "where 1 = 1 and m.year = :year and m.state = :state and m.air_dry_bulb_temperature != -9999 "
+                + "and m.max_temperature_prev_hour != -9999 and m.min_temperature_prev_hour != -9999 "
+                + "group by m.year, m.month, m.state";
+        break;
+    }
     Query query = em.createNativeQuery(sql);
     query.setParameter("year", year);
     query.setParameter("state", state);
     List<Object> resultList = query.getResultList();
-    //        log.info("State: " + state + " - " + (System.currentTimeMillis() - start));
     return resultList;
   }
 }
