@@ -18,6 +18,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckbox, MatCheckboxModule } from "@angular/material/checkbox";
+import { MatSidenavModule } from '@angular/material/sidenav';
+
 import { MeasurementService } from './weather/measurements/measurement.service';
 import { MeasurementListComponent } from './weather/measurements/measurement-list/measurement-list.component';
 
@@ -41,6 +45,9 @@ import { MeasurementListComponent } from './weather/measurements/measurement-lis
     MatExpansionModule,
     MatTableModule,
     MatIconModule,
+    MatSidenavModule,
+    MatSelectModule,
+    MatCheckboxModule,
 
     HttpClientModule
   ],

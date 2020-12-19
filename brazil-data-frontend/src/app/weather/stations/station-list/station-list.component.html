@@ -1,63 +1,104 @@
-<app-header></app-header>
+<ng-container>
 
-<main>
+  <mat-sidenav-container class="example-container">
 
-  <table mat-table [dataSource]="stations" class="mat-elevation-z8" *ngIf="stations.length > 0">
+    <mat-sidenav mode="side" opened>
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-    </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
+      <mat-accordion>
 
-    <ng-container matColumnDef="region">
-      <th mat-header-cell *matHeaderCellDef> Region </th>
-      <td mat-cell *matCellDef="let element"> {{element.region}} </td>
-    </ng-container>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              States
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more states
+            </mat-panel-description>
+          </mat-expansion-panel-header>
 
-    <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef> State </th>
-      <td mat-cell *matCellDef="let element"> {{element.state}} </td>
-    </ng-container>
+          <div *ngFor="let state of states">
+            <mat-checkbox  (change)="onChange($event, state)" value="state">
+              {{ state }}
+            </mat-checkbox>
+          </div>
 
-    <ng-container matColumnDef="wmoCode">
-      <th mat-header-cell *matHeaderCellDef> WMO </th>
-      <td mat-cell *matCellDef="let element"> {{ element.wmoCode }} </td>
-    </ng-container>
+        </mat-expansion-panel>
 
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> Position </th>
-      <td mat-cell *matCellDef="let element"> {{ element.position }} </td>
-    </ng-container>
+      </mat-accordion>
 
-    <ng-container matColumnDef="altitude">
-      <th mat-header-cell *matHeaderCellDef> Altitude </th>
-      <td mat-cell *matCellDef="let element"> {{element.altitude}} </td>
-    </ng-container>
+    </mat-sidenav>
 
-    <ng-container matColumnDef="foundationDate">
-      <th mat-header-cell *matHeaderCellDef> Foundation Date </th>
-      <td mat-cell *matCellDef="let element"> {{ element.foundationDate }} </td>
-    </ng-container>
 
-    <ng-container matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef> View </th>
-      <td mat-cell *matCellDef="let element">
-        <button (click)="edit(element.id)" mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button>
-      </td>
+    <mat-sidenav-content>
 
-    </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <main>
 
-  <p class="info-text mat-body-1" *ngIf="stations.length == 0">No stations saved.</p>
+        <table mat-table [dataSource]="stations" class="mat-elevation-z8" *ngIf="stations.length > 0">
 
-</main>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="region">
+            <th mat-header-cell *matHeaderCellDef> Region </th>
+            <td mat-cell *matCellDef="let element"> {{element.region}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef> State </th>
+            <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="wmoCode">
+            <th mat-header-cell *matHeaderCellDef> WMO </th>
+            <td mat-cell *matCellDef="let element"> {{ element.wmoCode }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef> Position </th>
+            <td mat-cell *matCellDef="let element"> {{ element.position }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="altitude">
+            <th mat-header-cell *matHeaderCellDef> Altitude </th>
+            <td mat-cell *matCellDef="let element"> {{element.altitude}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="foundationDate">
+            <th mat-header-cell *matHeaderCellDef> Foundation Date </th>
+            <td mat-cell *matCellDef="let element"> {{ element.foundationDate }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> View </th>
+            <td mat-cell *matCellDef="let element">
+              <button (click)="edit(element.id)" mat-icon-button>
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <p class="info-text mat-body-1" *ngIf="stations.length == 0">No stations saved.</p>
+
+      </main>
+
+
+
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+
+</ng-container>

@@ -10,6 +10,7 @@ export class MeasurementService {
 
   findAllTemperatures(years: string[], states: string[]) {
     const url = API_URL_MEASUREMENTS + "/MONTHLY?years=" + years + "&states=" + states
+    console.log(url);
     return this.http.get<TemperatureByFrequency[][]>(url);
   }
 
