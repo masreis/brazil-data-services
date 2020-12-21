@@ -1,16 +1,18 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
+import { ChartDataSets } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
 import { StationService } from '../../stations/station.service';
 import { MeasurementService } from '../measurement.service';
 import { TemperatureByFrequency } from '../temperature-by-frequency.model';
 
 @Component({
-  selector: 'app-measurement-list',
-  templateUrl: './measurement-list.component.html',
-  styleUrls: ['./measurement-list.component.css']
+  selector: 'app-measurement-linechart',
+  templateUrl: './measurement-linechart.component.html',
+  styleUrls: ['./measurement-linechart.component.css']
 })
-export class MeasurementListComponent implements OnInit {
+export class MeasurementLineChartComponent implements OnInit {
 
   temperaturesByFrequency: TemperatureByFrequency[] = [];
   selectedYears: number[] = [2019];
@@ -18,7 +20,40 @@ export class MeasurementListComponent implements OnInit {
   years: number[] = [];
   states: string[] = [];
 
-  displayedColumns: string[] = ['temperatureAvg', 'temperatureMax', 'temperatureMin', 'referenceDate', 'year', 'month', 'state', 'frequency'];
+  lineChartData: ChartDataSets[] = [];
+  lineChartLabels: Label[] = [];
+
+  lineChartOptions = {
+    responsive: true,
+    legend: { position: 'right' },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          },
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: "Degrees celsius",
+          }
+        }
+      ], xAxes: [
+        {
+          scaleLabel: {
+            display: true,
+            labelString: "Month of the Year",
+          },
+        },
+      ]
+    }
+  };
+
+  lineChartColors: Color[] = [];
+
+  lineChartLegend = true;
+  lineChartPlugins = [];
+  lineChartType = 'line';
 
   constructor(
     public measurementService: MeasurementService,
@@ -45,9 +80,22 @@ export class MeasurementListComponent implements OnInit {
   private loadTemperatures() {
     this.measurementService.findAllTemperatures(this.selectedYears, this.selectedStates).subscribe(
       (response) => {
+
         this.temperaturesByFrequency = [];
+        this.lineChartData = [];
+
         response.forEach(arr => {
-          this.temperaturesByFrequency = this.temperaturesByFrequency.concat(arr);
+
+          this.lineChartData.push(
+            {
+              data: arr.map(temp => temp.temperatureAvg),
+              label: arr[0].state + '/' + arr[0].year,
+              fill: false
+            }
+          );
+
+          this.lineChartLabels = arr.map(temp => temp.month.toLocaleString());
+
         });
       }
     );
@@ -61,8 +109,11 @@ export class MeasurementListComponent implements OnInit {
     if (event.checked) {
       this.selectedStates.push(value);
     } else {
-      this.selectedStates.splice(this.selectedStates.indexOf(value), 1);
+      const indexOf = this.selectedStates.indexOf(value);
+      this.selectedStates.splice(indexOf, 1);
     }
+
+    this.selectedStates.sort();
 
     this.loadTemperatures();
 
@@ -81,5 +132,6 @@ export class MeasurementListComponent implements OnInit {
     this.loadTemperatures();
 
   }
+
 
 }

@@ -19,18 +19,21 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from '@angular/material/select';
-import { MatCheckbox, MatCheckboxModule } from "@angular/material/checkbox";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { ChartsModule } from 'ng2-charts';
 
 import { MeasurementService } from './weather/measurements/measurement.service';
 import { MeasurementListComponent } from './weather/measurements/measurement-list/measurement-list.component';
+import { MeasurementLineChartComponent } from "./weather/measurements/measurement-linechart/measurement-linechart.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     StationListComponent,
-    MeasurementListComponent
+    MeasurementListComponent,
+    MeasurementLineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,8 @@ import { MeasurementListComponent } from './weather/measurements/measurement-lis
     MatSidenavModule,
     MatSelectModule,
     MatCheckboxModule,
+
+    ChartsModule,
 
     HttpClientModule
   ],

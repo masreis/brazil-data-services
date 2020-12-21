@@ -1,30 +1,61 @@
 package net.brazildata.weather.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import net.brazildata.weather.model.Station;
+import net.brazildata.weather.model.dto.StationDTO;
 import net.brazildata.weather.repository.StationRepository;
 import net.brazildata.weather.service.StationService;
 
 @Service
 public class StationServiceImpl implements StationService {
 
-  private StationRepository estacaoRepository;
+  private final StationRepository stationRepository;
+  private final ModelMapper mapper;
 
-  public StationServiceImpl(StationRepository estacaoRepository) {
-    this.estacaoRepository = estacaoRepository;
+  public StationServiceImpl(final StationRepository estacaoRepository, final ModelMapper mapper) {
+    this.stationRepository = estacaoRepository;
+    this.mapper = mapper;
   }
 
   public Station save(Station estacao) {
-    return this.estacaoRepository.save(estacao);
+    return this.stationRepository.save(estacao);
   }
 
   @Override
   public Station findByCodigoWmo(String codigoWmo) {
-    return estacaoRepository.findByWmoCode(codigoWmo);
+    return stationRepository.findByWmoCode(codigoWmo);
   }
 
-//  public List<Station> findAllByState(List<String> states) {
-//    return this.estacaoRepository.findAllByState(states);
-//  }
+  @Override
+  public List<StationDTO> findAll(PageRequest pg) {
+    return this.stationRepository
+        .findAll(pg)
+        .stream()
+        .map(this::convert)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<StationDTO> findByStateIn(PageRequest pg, List<String> listStates) {
+    return this.stationRepository
+        .findByStateIn(pg, listStates)
+        .stream()
+        .map(this::convert)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<String> findStates() {
+    return this.stationRepository.findStates();
+  }
+
+  private StationDTO convert(Station estacao) {
+    return mapper.map(estacao, StationDTO.class);
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Station } from '../station.model';
 import { StationService } from '../station.service';
 
@@ -13,7 +14,7 @@ export class StationListComponent implements OnInit {
 
   stations: Station[] = [];
   states: string[] = [];
-  selectedStates: string[] = [];
+  selectedStates: string[] = ['DF'];
 
   displayedColumns: string[] = ['name', 'region', 'state', 'wmoCode', 'position', 'altitude', 'foundationDate'];
 
@@ -23,18 +24,9 @@ export class StationListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.stationService.findAll().subscribe(
-      (response) => {
-        this.stations = response
-      }
-    );
-
+    this.loadStations();
     this.stationService.findAllStates().subscribe(response => this.states = response);
 
-  }
-
-  modelChange() {
-    console.log(this.selectedStates);
   }
 
   onChange(event: MatCheckboxChange, value: string) {
@@ -52,10 +44,8 @@ export class StationListComponent implements OnInit {
     this.router.navigate(['expense-edit', id])
   }
 
-
   loadStations() {
-    let listObservable = null;
-    console.log(this.selectedStates);
+    let listObservable: Observable<Station[]>;
     if (this.selectedStates.length == 0) {
       listObservable = this.stationService.findAll();
     } else {
@@ -67,4 +57,5 @@ export class StationListComponent implements OnInit {
     });
 
   }
+
 }

@@ -18,8 +18,26 @@
           </mat-expansion-panel-header>
 
           <div *ngFor="let state of states">
-            <mat-checkbox (change)="onChange($event, state)" value="state">
+            <mat-checkbox (change)="onChangeState($event, state)" [checked]="selectedStates.indexOf(state)>=0">
               {{ state }}
+            </mat-checkbox>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Years
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more years
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let year of years">
+            <mat-checkbox (change)="onChangeYear($event, year)" [checked]="this.selectedYears.indexOf(year)>=0">
+              {{ year }}
             </mat-checkbox>
           </div>
 

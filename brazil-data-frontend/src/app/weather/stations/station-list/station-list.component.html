@@ -18,7 +18,7 @@
           </mat-expansion-panel-header>
 
           <div *ngFor="let state of states">
-            <mat-checkbox  (change)="onChange($event, state)" value="state">
+            <mat-checkbox (change)="onChange($event, state)" [checked]="selectedStates.indexOf(state)>=0">
               {{ state }}
             </mat-checkbox>
           </div>

@@ -1,0 +1,70 @@
+<ng-container>
+
+  <mat-sidenav-container class="example-container">
+
+    <mat-sidenav mode="side" opened>
+
+      <mat-accordion>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              States
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more states
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let state of states">
+            <mat-checkbox (change)="onChangeState($event, state)" [checked]="this.selectedStates.indexOf(state)>=0">
+              {{ state }}
+            </mat-checkbox>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Years
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more years
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let year of years">
+            <mat-checkbox (change)="onChangeYear($event, year)" [checked]="this.selectedYears.indexOf(year)>=0">
+              {{ year }}
+            </mat-checkbox>
+          </div>
+
+        </mat-expansion-panel>
+
+      </mat-accordion>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+      <main>
+
+        <div class="chart-wrapper">
+          <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+            [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+            [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+
+        <p class="info-text mat-body-1" *ngIf="lineChartData.length == 0">No records saved.</p>
+
+      </main>
+
+
+
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+
+</ng-container>
