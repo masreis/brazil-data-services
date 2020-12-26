@@ -24,7 +24,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.brazildata.weather.model.Measurement;
 import net.brazildata.weather.model.Station;
@@ -45,7 +44,7 @@ public class WeatherDataImport {
 
   public void process() {
     File destDir = new File(System.getProperty("java.io.tmpdir") + "/weather");
-    String file = "/media/marco/disk-cloud/dados/inmet/2013.zip";
+    String file = "/media/marco/disk-cloud/dados/inmet/2020.zip";
     try {
       destDir.mkdir();
       byte[] buffer = new byte[1024];
@@ -126,7 +125,6 @@ public class WeatherDataImport {
       }
     }
 
-    @Transactional
     private void insertStation() {
       try {
         Station found = stationService.findByCodigoWmo(station.getWmoCode());
@@ -215,7 +213,6 @@ public class WeatherDataImport {
       }
     }
 
-    @Transactional
     private void insertMeasure(String line) {
       String[] dados = line.split(";", -1);
       Measurement medida = null;
@@ -224,14 +221,14 @@ public class WeatherDataImport {
         String dateTime = dados[i++] + " " + dados[i++].replaceAll(" UTC", "");
         initializeDateTimeFormatterMeasure(dateTime);
 
-        LocalDateTime coletadoEm = LocalDateTime.parse(dateTime, dateTimeFormatter);
+        LocalDateTime collectedOn = LocalDateTime.parse(dateTime, dateTimeFormatter);
 
         medida =
             Measurement.builder()
-                .collectedOn(coletadoEm)
-                .year(coletadoEm.getYear())
+                .collectedOn(collectedOn)
+                .year(collectedOn.getYear())
                 .station(this.station)
-                .month(coletadoEm.getMonthValue())
+                .month(collectedOn.getMonthValue())
                 .state(this.station.getState())
                 .totalPrecipitation(floatFromString(dados[i++]))
                 .atmosphericPressure(floatFromString(dados[i++]))

@@ -16,6 +16,6 @@ public class TemperatureByFrequencyDTO {
   private String referenceDate;
   private Integer year;
   private Integer month;
-  private String state;
+  private String location;
   private Frequency frequency;
 }

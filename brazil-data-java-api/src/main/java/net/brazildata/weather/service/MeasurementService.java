@@ -18,8 +18,8 @@ public interface MeasurementService {
 
   List<MeasurementDTO> findByYearAndStationState(Integer year, String state, PageRequest pg);
 
-  List<TemperatureByFrequencyDTO> findTemperatureByFrequencyAndYearAndState(
-      Frequency frequency, Integer ano, String state);
+  List<List<TemperatureByFrequencyDTO>> findTemperatureByFrequency(
+      Frequency frequency, String years, String states, String stationIds);
 
   List<Integer> findYears();
 }

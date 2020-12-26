@@ -7,6 +7,6 @@ export interface TemperatureByFrequency {
   referenceDate: string;
   year: number;
   month: number;
-  state: string;
+  location: string;
   frequency: Frequency;
 }

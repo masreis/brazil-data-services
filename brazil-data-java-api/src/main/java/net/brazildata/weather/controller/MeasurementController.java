@@ -1,9 +1,6 @@
 package net.brazildata.weather.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -49,33 +46,16 @@ public class MeasurementController {
   }
 
   @GetMapping("/{frequency}")
-  @ApiOperation("Find measurements by frequency")
+  @ApiOperation(
+      "Find measurements by frequency. Filter by request param 'years', 'states' and 'idStations'. "
+          + "Values separated by comma, i.e. 'states=2001,2002', 'states='AA,BB,CC' and 'stationIds=1,2,3'")
   public ResponseEntity<List<List<TemperatureByFrequencyDTO>>> findTemperatureByFrequency(
       @PathVariable Frequency frequency,
       @RequestParam(required = false) String years,
-      @RequestParam(required = false) String states) {
-
-    List<List<TemperatureByFrequencyDTO>> dtos = new ArrayList<>();
-
-    Arrays.asList(years.split(","))
-        .stream()
-        .mapToInt(year -> Integer.valueOf(year))
-        .boxed()
-        .collect(Collectors.toList())
-        .forEach(
-            year -> {
-              Arrays.asList(states.split(","))
-                  .stream()
-                  .forEach(
-                      state -> {
-                        List<TemperatureByFrequencyDTO> list =
-                            this.measurementService.findTemperatureByFrequencyAndYearAndState(
-                                frequency, year, state);
-                        dtos.add(list);
-                      });
-            });
-
-    return ResponseEntity.ok(dtos);
+      @RequestParam(required = false) String states,
+      @RequestParam(required = false) String stationIds) {
+    return ResponseEntity.ok(
+        this.measurementService.findTemperatureByFrequency(frequency, years, states, stationIds));
   }
 
   @GetMapping("/years")

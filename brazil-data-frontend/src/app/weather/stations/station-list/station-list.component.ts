@@ -47,7 +47,7 @@ export class StationListComponent implements OnInit {
   loadStations() {
     let listObservable: Observable<Station[]>;
     if (this.selectedStates.length == 0) {
-      listObservable = this.stationService.findAll();
+      listObservable = this.stationService.findAllStations();
     } else {
       listObservable = this.stationService.findStationsByState(this.selectedStates);
     }

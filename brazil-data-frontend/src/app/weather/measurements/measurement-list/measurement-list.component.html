@@ -7,7 +7,22 @@
 
       <mat-accordion>
 
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Filters
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ selectedStates.toLocaleString() + ' - ' +
+              selectedStations.toLocaleString() + ' - ' +
+              selectedYears.toLocaleString() }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>This is the primary content of the panel.</p>
+        </mat-expansion-panel>
+
         <mat-expansion-panel>
+
           <mat-expansion-panel-header>
             <mat-panel-title>
               States
@@ -20,6 +35,25 @@
           <div *ngFor="let state of states">
             <mat-checkbox (change)="onChangeState($event, state)" [checked]="selectedStates.indexOf(state)>=0">
               {{ state }}
+            </mat-checkbox>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Stations
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more stations
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let station of stations">
+            <mat-checkbox (change)="onChangeStation($event, station.id)"
+              [checked]="this.selectedStations.indexOf(station.id) >= 0" [value]="station.id">
+              {{ station.name + '/' + station.state}}
             </mat-checkbox>
           </div>
 
@@ -57,53 +91,43 @@
           *ngIf="temperaturesByFrequency.length > 0">
 
           <ng-container matColumnDef="temperatureAvg">
-            <th mat-header-cell *matHeaderCellDef> temperatureAvg </th>
+            <th mat-header-cell *matHeaderCellDef> Temperature Avg </th>
             <td mat-cell *matCellDef="let element"> {{element.temperatureAvg}} </td>
           </ng-container>
 
           <ng-container matColumnDef="temperatureMax">
-            <th mat-header-cell *matHeaderCellDef> temperatureMax </th>
+            <th mat-header-cell *matHeaderCellDef> Temperature Max </th>
             <td mat-cell *matCellDef="let element"> {{element.temperatureMax}} </td>
           </ng-container>
 
           <ng-container matColumnDef="temperatureMin">
-            <th mat-header-cell *matHeaderCellDef> temperatureMin </th>
+            <th mat-header-cell *matHeaderCellDef> Temperature Min </th>
             <td mat-cell *matCellDef="let element"> {{element.temperatureMin}} </td>
           </ng-container>
 
           <ng-container matColumnDef="referenceDate">
-            <th mat-header-cell *matHeaderCellDef> referenceDate </th>
+            <th mat-header-cell *matHeaderCellDef> Reference Date </th>
             <td mat-cell *matCellDef="let element"> {{element.referenceDate}} </td>
           </ng-container>
 
           <ng-container matColumnDef="year">
-            <th mat-header-cell *matHeaderCellDef> year </th>
+            <th mat-header-cell *matHeaderCellDef> Year </th>
             <td mat-cell *matCellDef="let element"> {{ element.year }} </td>
           </ng-container>
 
           <ng-container matColumnDef="month">
-            <th mat-header-cell *matHeaderCellDef> month </th>
+            <th mat-header-cell *matHeaderCellDef> Month </th>
             <td mat-cell *matCellDef="let element"> {{ element.month }} </td>
           </ng-container>
 
-          <ng-container matColumnDef="state">
-            <th mat-header-cell *matHeaderCellDef> state </th>
-            <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef> Location </th>
+            <td mat-cell *matCellDef="let element"> {{element.location}} </td>
           </ng-container>
 
           <ng-container matColumnDef="frequency">
-            <th mat-header-cell *matHeaderCellDef> frequency </th>
+            <th mat-header-cell *matHeaderCellDef> Frequency </th>
             <td mat-cell *matCellDef="let element"> {{ element.frequency }} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="edit">
-            <th mat-header-cell *matHeaderCellDef> View </th>
-            <td mat-cell *matCellDef="let element">
-              <button (click)="edit(element.id)" mat-icon-button>
-                <mat-icon>edit</mat-icon>
-              </button>
-            </td>
-
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

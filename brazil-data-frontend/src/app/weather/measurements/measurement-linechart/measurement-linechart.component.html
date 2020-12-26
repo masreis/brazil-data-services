@@ -27,6 +27,25 @@
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
+              Stations
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more stations
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let station of stations">
+            <mat-checkbox (change)="onChangeStation($event, station.id)"
+              [checked]="this.selectedStations.indexOf(station.id) >= 0" [value]="station.id">
+              {{ station.name + '/' + station.state}}
+            </mat-checkbox>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
               Years
             </mat-panel-title>
             <mat-panel-description>
@@ -37,6 +56,25 @@
           <div *ngFor="let year of years">
             <mat-checkbox (change)="onChangeYear($event, year)" [checked]="this.selectedYears.indexOf(year)>=0">
               {{ year }}
+            </mat-checkbox>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Aggregations
+            </mat-panel-title>
+            <mat-panel-description>
+              Choose one or more aggregation
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let aggregation of aggregations">
+            <mat-checkbox (change)="onChangeAggregation($event, aggregation)"
+              [checked]="this.selectedAggregations.indexOf(aggregation)>=0">
+              {{ aggregation }}
             </mat-checkbox>
           </div>
 

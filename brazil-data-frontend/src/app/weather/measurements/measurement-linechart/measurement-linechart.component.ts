@@ -1,29 +1,24 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
-import { StationService } from '../../stations/station.service';
-import { MeasurementService } from '../measurement.service';
-import { TemperatureByFrequency } from '../temperature-by-frequency.model';
+import { MeasurementListComponent } from '../measurement-list/measurement-list.component';
 
 @Component({
   selector: 'app-measurement-linechart',
   templateUrl: './measurement-linechart.component.html',
   styleUrls: ['./measurement-linechart.component.css']
 })
-export class MeasurementLineChartComponent implements OnInit {
-
-  temperaturesByFrequency: TemperatureByFrequency[] = [];
-  selectedYears: number[] = [2019];
-  selectedStates: string[] = ['DF'];
-  years: number[] = [];
-  states: string[] = [];
+export class MeasurementLineChartComponent extends MeasurementListComponent implements OnInit {
 
   lineChartData: ChartDataSets[] = [];
   lineChartLabels: Label[] = [];
 
   lineChartOptions = {
+    tooltips: {
+      mode: 'index',
+      intersect: false,
+      displayColors: false,
+    },
     responsive: true,
     legend: { position: 'right' },
     scales: {
@@ -55,83 +50,55 @@ export class MeasurementLineChartComponent implements OnInit {
   lineChartPlugins = [];
   lineChartType = 'line';
 
-  constructor(
-    public measurementService: MeasurementService,
-    public stationService: StationService,
-    private router: Router
-  ) { }
+  protected loadTemperatures() {
+    this.measurementService.findAllTemperatures(this.selectedYears, this.selectedStates, this.selectedStations)
+      .subscribe(
+        (response) => {
+          this.temperaturesByFrequency = [];
+          this.lineChartData = [];
 
-  ngOnInit(): void {
-    this.loadTemperatures();
-    this.loadYears();
-    this.loadStates();
-  }
+          response.forEach(arr => {
 
-  private loadStates() {
-    this.stationService.findAllStates().subscribe(response => this.states = response);
-  }
-
-  private loadYears() {
-    this.measurementService.findYears().subscribe(response => {
-      this.years = response;
-    });
-  }
-
-  private loadTemperatures() {
-    this.measurementService.findAllTemperatures(this.selectedYears, this.selectedStates).subscribe(
-      (response) => {
-
-        this.temperaturesByFrequency = [];
-        this.lineChartData = [];
-
-        response.forEach(arr => {
-
-          this.lineChartData.push(
-            {
-              data: arr.map(temp => temp.temperatureAvg),
-              label: arr[0].state + '/' + arr[0].year,
-              fill: false
+            if (this.selectedAggregations.indexOf(this.MINIMUM) >= 0) {
+              this.lineChartData.push(
+                {
+                  data: arr.map(temp => temp.temperatureMin),
+                  label: arr[0].location + '/' + arr[0].year + ' (min)',
+                  fill: false,
+                }
+              );
             }
-          );
 
-          this.lineChartLabels = arr.map(temp => temp.month.toLocaleString());
+            if (this.selectedAggregations.indexOf(this.AVERAGE) >= 0) {
+              this.lineChartData.push(
+                {
+                  data: arr.map(temp => temp.temperatureAvg),
+                  label: arr[0].location + '/' + arr[0].year + ' (avg)',
+                  fill: "-1"
+                }
+              );
+            }
 
-        });
-      }
-    );
+            if (this.selectedAggregations.indexOf(this.MAXIMUM) >= 0) {
+              this.lineChartData.push(
+                {
+                  data: arr.map(temp => temp.temperatureMax),
+                  label: arr[0].location + '/' + arr[0].year + ' (max)',
+                  fill: "-1",
+                }
+              );
+            }
+
+            this.lineChartLabels = arr.map(temp => temp.month.toLocaleString());
+
+          });
+        }, error => {
+
+          this.temperaturesByFrequency = [];
+          this.lineChartData = [];
+
+        }
+      );
   }
-
-  edit(id: number) {
-    this.router.navigate(['expense-edit', id])
-  }
-
-  onChangeState(event: MatCheckboxChange, value: string) {
-    if (event.checked) {
-      this.selectedStates.push(value);
-    } else {
-      const indexOf = this.selectedStates.indexOf(value);
-      this.selectedStates.splice(indexOf, 1);
-    }
-
-    this.selectedStates.sort();
-
-    this.loadTemperatures();
-
-  }
-
-  onChangeYear(event: MatCheckboxChange, value: number) {
-    if (event.checked) {
-      this.selectedYears.push(value);
-    } else {
-      const indexOf = this.selectedYears.indexOf(value);
-      this.selectedYears.splice(indexOf, 1);
-    }
-
-    this.selectedYears.sort();
-
-    this.loadTemperatures();
-
-  }
-
 
 }

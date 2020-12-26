@@ -5,11 +5,10 @@ import { API_URL_STATES, API_URL_STATIONS } from "../../app.constants";
 
 @Injectable({ providedIn: 'root' })
 export class StationService {
-  private stations: Station[] = [];
 
   constructor(private http: HttpClient) { }
 
-  findAll() {
+  findAllStations() {
     return this.http.get<Station[]>(API_URL_STATIONS);
   }
 
@@ -20,5 +19,5 @@ export class StationService {
   findAllStates() {
     return this.http.get<string[]>(API_URL_STATES);
   }
-}
 
+}

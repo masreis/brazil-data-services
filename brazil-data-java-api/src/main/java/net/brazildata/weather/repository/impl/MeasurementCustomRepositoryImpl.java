@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import net.brazildata.weather.model.dto.Frequency;
 import net.brazildata.weather.repository.MeasurementCustomRepository;
@@ -18,6 +20,7 @@ public class MeasurementCustomRepositoryImpl implements MeasurementCustomReposit
     this.em = em;
   }
 
+  @Deprecated
   public List<Object> findTemperatureByFrequencyAndYearAndStateIn(
       Frequency frequency, List<Integer> years, List<String> states) {
     String sql =
@@ -37,25 +40,60 @@ public class MeasurementCustomRepositoryImpl implements MeasurementCustomReposit
   }
 
   // TODO Implement other frequencies
-  public List<Object> findTemperatureByFrequencyAndYearAndState(
-      Frequency frequency, Integer year, String state) {
-    String sql = "";
+  public List<Object> findTemperatureByFrequency(
+      Frequency frequency, Integer year, String state, Long stationId) {
+    String sql = getSql(frequency, year, state, stationId);
+    Query query = em.createNativeQuery(sql);
+    query.setParameter("year", year);
+
+    if (StringUtils.isNotEmpty(state)) {
+      query.setParameter("state", state);
+    }
+
+    if (stationId != null) {
+      query.setParameter("stationId", stationId);
+    }
+
+    List<Object> resultList = query.getResultList();
+    return resultList;
+  }
+
+  private String getSql(Frequency frequency, Integer year, String state, Long stationId) {
+    String sql = null;
     switch (frequency) {
       case MONTHLY:
         sql =
             "select round(avg(air_dry_bulb_temperature),1) temperatureAvg, max(max_temperature_prev_hour) temperatureMax, "
                 + "min(min_temperature_prev_hour) temperatureMin, year, month, "
-                + "m.state, 'MONTHLY' as frequency, date_format(collected_on, '%Y-%m') "
+                + getLocation(stationId)
+                + " as location, 'MONTHLY' as frequency, date_format(collected_on, '%Y-%m') "
                 + "from measurement m left join station s on m.station_id = s.id "
-                + "where 1 = 1 and m.year = :year and m.state = :state and m.air_dry_bulb_temperature != -9999 "
+                + "where 1 = 1 and m.year = :year and m.air_dry_bulb_temperature != -9999 "
                 + "and m.max_temperature_prev_hour != -9999 and m.min_temperature_prev_hour != -9999 "
-                + "group by m.year, m.month, m.state";
+                + getClauseStationId(stationId)
+                + "group by m.year, m.month, "
+                + getLocation(stationId);
         break;
+      case YEARLY:
+      case DAILY:
+      case WEEKLY:
+        throw new IllegalArgumentException("Not implemented");
     }
-    Query query = em.createNativeQuery(sql);
-    query.setParameter("year", year);
-    query.setParameter("state", state);
-    List<Object> resultList = query.getResultList();
-    return resultList;
+
+    return sql;
+  }
+
+  private String getClauseStationId(Long stationId) {
+    if (stationId != null) {
+      return "and m.station_id = :stationId ";
+    }
+    return "and m.state = :state ";
+  }
+
+  private String getLocation(Long stationId) {
+    if (stationId != null) {
+      return "concat(s.name, '/', m.state) ";
+    }
+    return "m.state ";
   }
 }

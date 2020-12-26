@@ -13,8 +13,8 @@ export class MeasurementService {
 
   constructor(private http: HttpClient) { }
 
-  findAllTemperatures(years: number[], states: string[]) {
-    const url = API_URL_MEASUREMENTS + "/MONTHLY?years=" + years + "&states=" + states
+  findAllTemperatures(years: number[], states: string[], stations: string[]) {
+    const url = API_URL_MEASUREMENTS + "/MONTHLY?years=" + years + "&states=" + states + "&stationIds=" + stations;
     return this.http.get<TemperatureByFrequency[][]>(url);
   }
 

@@ -1,7 +1,7 @@
 #
 # A fatal error has been detected by the Java Runtime Environment:
 #
-#  SIGSEGV (0xb) at pc=0x00007fd64aefc0d1, pid=11153, tid=11170
+#  SIGSEGV (0xb) at pc=0x00007f18dc4010d1, pid=27562, tid=27578
 #
 # JRE version: Java(TM) SE Runtime Environment 18.9 (11.0.7+8) (build 11.0.7+8-LTS)
 # Java VM: Java HotSpot(TM) 64-Bit Server VM 18.9 (11.0.7+8-LTS, mixed mode, tiered, compressed oops, g1 gc, linux-amd64)
@@ -16,6 +16,6 @@
 
 ---------------  S U M M A R Y ------------
 
-Command Line: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:45985 -javaagent:/home/marco/software/eclipse/eclipse-2020-03/configuration/org.eclipse.osgi/441/0/.cp/lib/javaagent-shaded.jar -Dfile.encoding=UTF-8 net.brazildata.BrazilDataJavaApiApplication
+Command Line: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:46457 -javaagent:/home/marco/software/eclipse/eclipse-2020-03/configuration/org.eclipse.osgi/441/0/.cp/lib/javaagent-shaded.jar -Dfile.encoding=UTF-8 net.brazildata.BrazilDataJavaApiApplication
 
 Host: 

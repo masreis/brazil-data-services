@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.brazildata.weather.util.WeatherDataImport;
 
 @RestController
-@RequestMapping("/data-import-controller")
+@RequestMapping("/v1/data-import")
 public class DataImportController {
 
   private WeatherDataImport dataImport;
@@ -19,8 +19,8 @@ public class DataImportController {
     this.dataImport = dataImport;
   }
 
-  @GetMapping("/{ano}")
-  public ResponseEntity<?> importData(@PathVariable String ano) {
+  @GetMapping("/{year}")
+  public ResponseEntity<?> importData(@PathVariable String year) {
     this.dataImport.process();
     return new ResponseEntity<>(HttpStatus.ACCEPTED);
   }
