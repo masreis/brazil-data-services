@@ -19,7 +19,7 @@ Para carregar os dados no MySQL pode-se usar o *profile=load* do Spring:
 mvn spring-boot:run -Dspring-boot.run.profiles=load
 ```
 
-Algumas ideias de consulta:
+Algumas ideias de dados para consulta:
 
 * Temperatura;
 * Umidade;
@@ -35,11 +35,11 @@ Alguns agrupamentos disponíveis:
 * Posição (latitude e longitude);
 * Altitude.
 
-A imagem abaixo mostra a temperatura no DF nos meses de 2013:
+A imagem abaixo mostra a temperatura média, máxima e mínima no DF nos meses de 2013:
 
 ![Temperatura no DF](images/df-2013-temperature.png)
 
-Em outro exemplo podemos ver a menor humidade relativa do ar coletada em 2019.
+Em outro exemplo podemos ver a menor humidade relativa do ar coletada por estado em 2019.
 
 ![Humidad](images/min-humidity-air.png)
 
