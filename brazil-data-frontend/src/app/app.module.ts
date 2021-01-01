@@ -4,10 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { StationListComponent } from './weather/stations/station-list/station-list.component';
-import { HeaderComponent } from './header/header.components';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StationService } from './weather/stations/station.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -21,11 +18,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatGridListModule } from "@angular/material/grid-list";
 import { ChartsModule } from 'ng2-charts';
 
 import { MeasurementService } from './weather/measurements/measurement.service';
 import { MeasurementListComponent } from './weather/measurements/measurement-list/measurement-list.component';
 import { MeasurementLineChartComponent } from "./weather/measurements/measurement-linechart/measurement-linechart.component";
+import { StationService } from './weather/stations/station.service';
+import { StationListComponent } from './weather/stations/station-list/station-list.component';
+import { HeaderComponent } from './header/header.components';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { MeasurementLineChartComponent } from "./weather/measurements/measuremen
     MatSidenavModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatGridListModule,
 
     ChartsModule,
 

@@ -23,6 +23,8 @@ import java.util.zip.ZipInputStream;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import net.brazildata.weather.model.Measurement;
@@ -31,27 +33,32 @@ import net.brazildata.weather.service.MeasurementService;
 import net.brazildata.weather.service.StationService;
 
 @Component
-public class WeatherDataImport {
+@Profile("load")
+public class WeatherDataImportUtil implements CommandLineRunner {
 
   private StationService stationService;
   private MeasurementService measurementService;
 
-  public WeatherDataImport(StationService estacaoService, MeasurementService medidaService) {
+  public WeatherDataImportUtil(StationService estacaoService, MeasurementService medidaService) {
     this.stationService = estacaoService;
     this.measurementService = medidaService;
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
   }
 
+  @Override
+  public void run(String... args) throws Exception {
+    process();
+  }
+
   public void process() {
     File destDir = new File(System.getProperty("java.io.tmpdir") + "/weather");
-    String file = "/media/marco/disk-cloud/dados/inmet/2020.zip";
+    String file = "/media/marco/disk-cloud/dados/inmet/2000.zip";
     try {
       destDir.mkdir();
       byte[] buffer = new byte[1024];
       ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
       ZipEntry zipEntry = zis.getNextEntry();
       ExecutorService executor = Executors.newWorkStealingPool();
-      //            ExecutorService executor = Executors.newFixedThreadPool(8);
       Collection<Callable<Void>> tasks = new ArrayList<>();
       while (zipEntry != null) {
         if (zipEntry.isDirectory()) {
@@ -213,6 +220,18 @@ public class WeatherDataImport {
       }
     }
 
+    // List of fields in the file
+    // Data;Hora UTC;PRECIPITA��O TOTAL, HOR�RIO (mm);PRESSAO ATMOSFERICA AO NIVEL DA ESTACAO,
+    // HORARIA (mB);PRESS�O ATMOSFERICA MAX.NA HORA ANT. (AUT) (mB);PRESS�O ATMOSFERICA MIN. NA HORA
+    // ANT. (AUT) (mB);RADIACAO GLOBAL (Kj/m�);TEMPERATURA DO AR - BULBO SECO, HORARIA (�C);
+    // TEMPERATURA DO PONTO DE
+    // ORVALHO (�C);TEMPERATURA M�XIMA NA HORA ANT. (AUT) (�C);TEMPERATURA M�NIMA NA HORA ANT. (AUT)
+    // (�C);TEMPERATURA ORVALHO MAX. NA HORA ANT. (AUT)
+    // (�C);TEMPERATURA ORVALHO MIN. NA HORA ANT. (AUT) (�C);UMIDADE REL. MAX. NA HORA ANT. (AUT)
+    // (%);UMIDADE REL. MIN. NA HORA ANT. (AUT) (%);UMIDADE RELATIVA
+    // DO AR, HORARIA (%);VENTO, DIRE��O HORARIA (gr) (� (gr));VENTO, RAJADA MAXIMA (m/s);VENTO,
+    // VELOCIDADE HORARIA (m/s);
+
     private void insertMeasure(String line) {
       String[] dados = line.split(";", -1);
       Measurement medida = null;
@@ -256,18 +275,6 @@ public class WeatherDataImport {
         System.out.println(e.getMessage());
         System.out.println(e.getLocalizedMessage());
       }
-
-      // Data;Hora UTC;PRECIPITA��O TOTAL, HOR�RIO (mm);PRESSAO ATMOSFERICA AO NIVEL
-      // DA ESTACAO, HORARIA (mB);PRESS�O ATMOSFERICA MAX.NA HORA ANT. (AUT)
-      // (mB);PRESS�O ATMOSFERICA MIN. NA HORA ANT. (AUT) (mB);RADIACAO GLOBAL
-      // (Kj/m�);TEMPERATURA DO AR - BULBO SECO, HORARIA (�C); TEMPERATURA DO PONTO DE
-      // ORVALHO (�C);TEMPERATURA M�XIMA NA HORA ANT. (AUT) (�C);TEMPERATURA M�NIMA NA
-      // HORA ANT. (AUT) (�C);TEMPERATURA ORVALHO MAX. NA HORA ANT. (AUT)
-      // (�C);TEMPERATURA ORVALHO MIN. NA HORA ANT. (AUT) (�C);UMIDADE REL. MAX. NA
-      // HORA ANT. (AUT) (%);UMIDADE REL. MIN. NA HORA ANT. (AUT) (%);UMIDADE RELATIVA
-      // DO AR, HORARIA (%);VENTO, DIRE��O HORARIA (gr) (� (gr));VENTO, RAJADA MAXIMA
-      // (m/s);VENTO, VELOCIDADE HORARIA (m/s);
-
     }
 
     private void initializeDateTimeFormatterMeasure(String dateTime) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartDataSets } from 'chart.js';
+import { ChartDataSets, Chart } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { MeasurementListComponent } from '../measurement-list/measurement-list.component';
 
@@ -9,6 +9,11 @@ import { MeasurementListComponent } from '../measurement-list/measurement-list.c
   styleUrls: ['./measurement-linechart.component.css']
 })
 export class MeasurementLineChartComponent extends MeasurementListComponent implements OnInit {
+
+  ngOnInit() {
+    super.ngOnInit();
+    Chart.defaults.global.defaultFontFamily = 'Roboto';
+  }
 
   lineChartData: ChartDataSets[] = [];
   lineChartLabels: Label[] = [];
@@ -74,7 +79,8 @@ export class MeasurementLineChartComponent extends MeasurementListComponent impl
                 {
                   data: arr.map(temp => temp.temperatureAvg),
                   label: arr[0].location + '/' + arr[0].year + ' (avg)',
-                  fill: "-1"
+                  // fill: "-1",
+                  fill: false
                 }
               );
             }
@@ -84,7 +90,8 @@ export class MeasurementLineChartComponent extends MeasurementListComponent impl
                 {
                   data: arr.map(temp => temp.temperatureMax),
                   label: arr[0].location + '/' + arr[0].year + ' (max)',
-                  fill: "-1",
+                  // fill: "-1",
+                  fill: false
                 }
               );
             }

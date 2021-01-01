@@ -19,12 +19,12 @@ import net.brazildata.weather.repository.MeasurementRepository;
 import net.brazildata.weather.service.MeasurementService;
 
 @Service
-public class MedidaServiceImpl implements MeasurementService {
+public class MeasurementServiceImpl implements MeasurementService {
 
   private final MeasurementRepository measurementRepository;
   private final ModelMapper mapper;
 
-  public MedidaServiceImpl(final MeasurementRepository medidaRepository, final ModelMapper mapper) {
+  public MeasurementServiceImpl(final MeasurementRepository medidaRepository, final ModelMapper mapper) {
     this.measurementRepository = medidaRepository;
     this.mapper = mapper;
   }
@@ -124,7 +124,9 @@ public class MedidaServiceImpl implements MeasurementService {
                             .stream()
                             .map(this::convertTemperatureByFrequency)
                             .collect(Collectors.toList());
-                    dtos.add(list);
+                    if (list.size() > 0) {
+                      dtos.add(list);
+                    }
                   });
         });
   }

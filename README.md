@@ -1,6 +1,6 @@
 # Brazil data services
 
-## Weather
+Serviços para acesso a dados abertos sobre o Brasil.
 
 ## Back end
 
@@ -15,4 +15,5 @@ API
 ## Front end
 
 * Angular 10;
+* NG2-charts;
 * Google Maps
