@@ -35,9 +35,9 @@ Alguns agrupamentos disponíveis:
 * Posição (latitude e longitude);
 * Altitude.
 
-A imagem abaixo mostra a temperatura média, máxima e mínima no DF nos meses de 2013:
+A imagem abaixo mostra a temperatura média, máxima e mínima no DF nos meses de 2020:
 
-![Temperatura no DF](images/df-2013-temperature.png)
+![Temperatura no DF](images/df-2020-temperature.png)
 
 Em outro exemplo podemos ver a menor humidade relativa do ar coletada por estado em 2019.
 

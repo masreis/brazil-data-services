@@ -56,7 +56,7 @@ export class MeasurementLineChartComponent extends MeasurementListComponent impl
   lineChartType = 'line';
 
   protected loadTemperatures() {
-    this.measurementService.findAllTemperatures(this.selectedYears, this.selectedStates, this.selectedStations)
+    this.measurementService.findTemperatures(this.selectedYears, this.selectedStates, this.selectedStations)
       .subscribe(
         (response) => {
           this.temperaturesByFrequency = [];
@@ -79,7 +79,6 @@ export class MeasurementLineChartComponent extends MeasurementListComponent impl
                 {
                   data: arr.map(temp => temp.temperatureAvg),
                   label: arr[0].location + '/' + arr[0].year + ' (avg)',
-                  // fill: "-1",
                   fill: false
                 }
               );
@@ -90,13 +89,12 @@ export class MeasurementLineChartComponent extends MeasurementListComponent impl
                 {
                   data: arr.map(temp => temp.temperatureMax),
                   label: arr[0].location + '/' + arr[0].year + ' (max)',
-                  // fill: "-1",
                   fill: false
                 }
               );
             }
 
-            this.lineChartLabels = arr.map(temp => temp.month.toLocaleString());
+            this.lineChartLabels = Array.from({ length: 12 }, (v, i) => (i + 1).toString());
 
           });
         }, error => {

@@ -54,8 +54,7 @@ public class MeasurementCustomRepositoryImpl implements MeasurementCustomReposit
       query.setParameter("stationId", stationId);
     }
 
-    List<Object> resultList = query.getResultList();
-    return resultList;
+    return query.getResultList();
   }
 
   private String getSql(Frequency frequency, Integer year, String state, Long stationId) {
@@ -77,7 +76,7 @@ public class MeasurementCustomRepositoryImpl implements MeasurementCustomReposit
       case YEARLY:
       case DAILY:
       case WEEKLY:
-        throw new IllegalArgumentException("Not implemented");
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     return sql;

@@ -21,10 +21,12 @@ import net.brazildata.weather.service.MeasurementService;
 @Service
 public class MeasurementServiceImpl implements MeasurementService {
 
+  private static final int TWELVE_MONTHS = 12;
   private final MeasurementRepository measurementRepository;
   private final ModelMapper mapper;
 
-  public MeasurementServiceImpl(final MeasurementRepository medidaRepository, final ModelMapper mapper) {
+  public MeasurementServiceImpl(
+      final MeasurementRepository medidaRepository, final ModelMapper mapper) {
     this.measurementRepository = medidaRepository;
     this.mapper = mapper;
   }
@@ -124,7 +126,11 @@ public class MeasurementServiceImpl implements MeasurementService {
                             .stream()
                             .map(this::convertTemperatureByFrequency)
                             .collect(Collectors.toList());
+
                     if (list.size() > 0) {
+                      if (list.size() != TWELVE_MONTHS) {
+                        normalizeMissingMonths(list);
+                      }
                       dtos.add(list);
                     }
                   });
@@ -148,8 +154,28 @@ public class MeasurementServiceImpl implements MeasurementService {
                             .stream()
                             .map(this::convertTemperatureByFrequency)
                             .collect(Collectors.toList());
+                    if (list.size() != TWELVE_MONTHS) {
+                      normalizeMissingMonths(list);
+                    }
                     dtos.add(list);
                   });
         });
+  }
+
+  private void normalizeMissingMonths(List<TemperatureByFrequencyDTO> list) {
+    TemperatureByFrequencyDTO model = list.stream().findFirst().get();
+    for (int i = 0; i < TWELVE_MONTHS; i++) {
+      if (list.size() > i && list.get(i).getMonth() == i + 1) {
+        continue;
+      }
+      TemperatureByFrequencyDTO missingMonthDto = new TemperatureByFrequencyDTO();
+      missingMonthDto.setLocation(model.getLocation());
+      missingMonthDto.setReferenceDate(model.getReferenceDate());
+      missingMonthDto.setYear(model.getYear());
+      missingMonthDto.setFrequency(model.getFrequency());
+      //
+      missingMonthDto.setMonth(i + 1);
+      list.add(i, missingMonthDto);
+    }
   }
 }

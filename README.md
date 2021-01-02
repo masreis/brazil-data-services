@@ -15,5 +15,5 @@ API
 ## Front end
 
 * Angular 10;
-* NG2-charts;
-* Google Maps
+* ng2-charts;
+* Google Maps (soon);

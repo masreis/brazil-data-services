@@ -48,11 +48,12 @@ public class WeatherDataImportUtil implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     process();
+    System.out.println("End of processing");
   }
 
   public void process() {
     File destDir = new File(System.getProperty("java.io.tmpdir") + "/weather");
-    String file = "/media/marco/disk-cloud/dados/inmet/2001.zip";
+    String file = "/media/marco/disk-cloud/dados/inmet/2003.zip";
     try {
       destDir.mkdir();
       byte[] buffer = new byte[1024];

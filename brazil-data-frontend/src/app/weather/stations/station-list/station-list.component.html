@@ -4,17 +4,26 @@
 
     <mat-sidenav mode="side" opened>
 
+      <mat-accordion [multi]="true">
 
-      <mat-accordion>
+        <mat-expansion-panel hideToggle [expanded]='true'>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Filters
+            </mat-panel-title>
+            <mat-panel-description>
+
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>{{ 'States: ' + selectedStates.toString() }}</p>
+
+        </mat-expansion-panel>
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
               States
             </mat-panel-title>
-            <mat-panel-description>
-              Choose one or more states
-            </mat-panel-description>
           </mat-expansion-panel-header>
 
           <div *ngFor="let state of states">

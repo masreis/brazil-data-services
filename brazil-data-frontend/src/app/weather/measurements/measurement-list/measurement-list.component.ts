@@ -65,12 +65,11 @@ export class MeasurementListComponent implements OnInit {
     this.measurementService.findYears().subscribe(
       response => this.years = response,
       error => console.log("ERROR: ", error)
-      //() => this.selectedYears.push(Math.max(...this.years))
     );
   }
 
   protected loadTemperatures() {
-    this.measurementService.findAllTemperatures(this.selectedYears, this.selectedStates, this.selectedStations)
+    this.measurementService.findTemperatures(this.selectedYears, this.selectedStates, this.selectedStations)
       .subscribe(
         response => {
           this.temperaturesByFrequency = [];
@@ -126,8 +125,6 @@ export class MeasurementListComponent implements OnInit {
     } else {
       this.selectedAggregations.splice(this.selectedAggregations.indexOf(value), 1);
     }
-
-    console.log(this.selectedAggregations);
 
     this.loadTemperatures();
 
