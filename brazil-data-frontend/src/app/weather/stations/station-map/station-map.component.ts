@@ -13,7 +13,6 @@ export class StationMapComponent extends StationListComponent implements OnInit 
   center: google.maps.LatLngLiteral
 
   ngOnInit() {
-    super.ngOnInit();
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
         lat: position.coords.latitude,
@@ -24,11 +23,13 @@ export class StationMapComponent extends StationListComponent implements OnInit 
 
   getPosition(station: Station) {
     let position = { lat: station.position[0], lng: station.position[1] };
+    console.log("Pos: ", position);
     return position;
   }
 
   getLabel(station: Station) {
     let label = { text: station.name };
+    console.log("Lab: ", label)
     return label;
   }
 
