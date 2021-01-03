@@ -21,18 +21,23 @@ export class StationListComponent implements OnInit {
   constructor(
     public stationService: StationService,
     private router: Router
-  ) { }
-
-  ngOnInit(): void {
-    this.loadStations();
+  ) {
+    console.log("constructor");
     this.loadStates();
   }
 
+  ngOnInit(): void {
+    console.log("ngOnInit");
+    this.loadStations();
+  }
+
   loadStates() {
+    console.log("loadStates")
     this.stationService.findAllStates().subscribe(response => this.states = response);
   }
 
   onChange(event: MatCheckboxChange, value: string) {
+    console.log("onChance");
     if (event.checked) {
       this.selectedStates.push(value);
     } else {
@@ -44,14 +49,9 @@ export class StationListComponent implements OnInit {
   }
 
   loadStations() {
-    let listObservable: Observable<Station[]>;
-    if (this.selectedStates.length == 0) {
-      listObservable = this.stationService.findAllStations();
-    } else {
-      listObservable = this.stationService.findStationsByState(this.selectedStates);
-    }
-
-    listObservable.subscribe(response => {
+    console.log("loadStations");
+    this.stations = [];
+    this.stationService.findStationsByState(this.selectedStates).subscribe(response => {
       this.stations = response;
     });
 
