@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
+import { GoogleMapsModule } from "@angular/google-maps";
 
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from "@angular/material/table";
@@ -26,6 +26,7 @@ import { MeasurementListComponent } from './weather/measurements/measurement-lis
 import { MeasurementLineChartComponent } from "./weather/measurements/measurement-linechart/measurement-linechart.component";
 import { StationService } from './weather/stations/station.service';
 import { StationListComponent } from './weather/stations/station-list/station-list.component';
+import { StationMapComponent } from "./weather/stations/station-map/station-map.component";
 import { HeaderComponent } from './header/header.components';
 
 @NgModule({
@@ -33,10 +34,12 @@ import { HeaderComponent } from './header/header.components';
     AppComponent,
     HeaderComponent,
     StationListComponent,
+    StationMapComponent,
     MeasurementListComponent,
     MeasurementLineChartComponent
   ],
   imports: [
+    GoogleMapsModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
@@ -55,6 +58,7 @@ import { HeaderComponent } from './header/header.components';
     MatGridListModule,
 
     ChartsModule,
+
 
     HttpClientModule
   ],

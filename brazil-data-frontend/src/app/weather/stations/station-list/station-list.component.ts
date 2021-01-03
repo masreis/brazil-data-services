@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -25,8 +25,11 @@ export class StationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStations();
-    this.stationService.findAllStates().subscribe(response => this.states = response);
+    this.loadStates();
+  }
 
+  loadStates() {
+    this.stationService.findAllStates().subscribe(response => this.states = response);
   }
 
   onChange(event: MatCheckboxChange, value: string) {
@@ -38,10 +41,6 @@ export class StationListComponent implements OnInit {
 
     this.loadStations();
 
-  }
-
-  edit(id: number) {
-    this.router.navigate(['expense-edit', id])
   }
 
   loadStations() {
