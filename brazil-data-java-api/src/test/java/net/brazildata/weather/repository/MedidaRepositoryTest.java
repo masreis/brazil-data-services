@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.brazildata.weather.model.Measurement;
-import net.brazildata.weather.model.Station;
+import net.brazildata.weather.domain.model.Measurement;
+import net.brazildata.weather.domain.model.Station;
+import net.brazildata.weather.domain.model.repository.MeasurementRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

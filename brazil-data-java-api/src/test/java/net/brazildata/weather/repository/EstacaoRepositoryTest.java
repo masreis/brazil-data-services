@@ -8,7 +8,8 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
-import net.brazildata.weather.model.Station;
+import net.brazildata.weather.domain.model.Station;
+import net.brazildata.weather.domain.model.repository.StationRepository;
 
 // @RunWith(SpringRunner.class)
 // @SpringBootTest
